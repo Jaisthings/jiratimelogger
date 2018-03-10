@@ -1,0 +1,11 @@
+.valign{
+    vertical-align: middle;
+    margin-bottom: 0.75em;
+}
+
+mat-sidenav{
+    background-color: #fafafa;
+    width:150px;
+    margin: 0px 4px 0px 0px;
+    height:500px;
+}

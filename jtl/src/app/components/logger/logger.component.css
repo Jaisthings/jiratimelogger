@@ -1,0 +1,22 @@
+.info-section{
+    padding: 15;
+}
+
+.tasks-section mat-grid-list{
+    border-top: 1px solid #d1d1d1;
+}
+
+.tasks-section mat-grid-tile{
+    margin-top:10px;
+}
+
+.task-card{
+    max-width: 400px;
+    background-color: #f1f1f1;
+    margin-bottom: 15px;
+}
+
+mat-card-header,mat-card-content{
+    background-color: #fff;
+    padding: 15;
+}

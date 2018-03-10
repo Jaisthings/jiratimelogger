@@ -1,0 +1,62 @@
+<mat-grid-list cols="8" rowHeight="60" class="header-layout">
+  <mat-grid-tile><h1>Tasks</h1></mat-grid-tile>
+  <mat-grid-tile>&nbsp;</mat-grid-tile>
+  <mat-grid-tile>&nbsp;</mat-grid-tile>
+  <mat-grid-tile>&nbsp;</mat-grid-tile>
+  <mat-grid-tile>
+      <mat-slide-toggle [checked]="suspendOn" (change)="suspendTool($event)">Suspend</mat-slide-toggle>
+  </mat-grid-tile>
+  <mat-grid-tile>&nbsp;</mat-grid-tile>
+  <mat-grid-tile>
+      <mat-slide-toggle [checked]="suspendOn" (click)="getTasks()"><i class="material-icons valign" >refresh</i>></mat-slide-toggle>
+  </mat-grid-tile>
+  <mat-grid-tile>
+      <mat-slide-toggle [checked]="suspendOn" (click)="showQuerySettings()"><i class="material-icons valign">settings</i></mat-slide-toggle>
+  </mat-grid-tile>
+
+</mat-grid-list>
+
+<mat-divider></mat-divider>
+<p class="info-section" *ngif="showMessage"><i class="material-icons valign">info</i>&nbsp;{{message}}</p>
+<br />
+<mat-spinner *ngif="showLoader" aria-valuenow="70" diameter="25"></mat-spinner>
+
+<div class="tasks-section">
+  <div *ngFor="let issue of issues">
+      <mat-card class="task-card">
+          <mat-card-content>
+            <mat-card-header>
+              <mat-card-title>
+                <img src="{{issue.fields.issuetype.iconUrl}}" width="18" height="18" />
+                <h2>{{issue.key}}</h2>
+              </mat-card-title>
+              <mat-card-subtitle>{{issue.fields.summary}}</mat-card-subtitle>
+              <mat-slide-toggle id="{{issue.key}}" checked="{{issue.active}}" (change)="activateTask($event)">Working</mat-slide-toggle>
+            </mat-card-header>
+
+            <div>
+              <mat-grid-list cols="2" rowHeight="60">
+                <mat-grid-tile>
+                  <p>Estimated Time</p>
+                  <mat-progress-bar mode="determinate" value="{{(issue.fields.aggregatetimeoriginalestimate)/(60*60)}}"></mat-progress-bar>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                  {{(issue.fields.aggregatetimeoriginalestimate)/(60*60) | round}} hours
+                </mat-grid-tile>
+                <mat-grid-tile>
+                  <p>Time Spent</p>
+                  <mat-progress-bar mode="determinate" value="{{(issue.fields.aggregatetimespent)/(60*60)}}"></mat-progress-bar>                  
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    {{(issue.fields.aggregatetimespent)/(60*60) | round}} hours
+                </mat-grid-tile>
+              </mat-grid-list>
+            </div>
+            <br />
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="closeTask(issue.key)">Mark as Done</button>
+          </mat-card-actions>
+      </mat-card>
+  </div>
+</div>
