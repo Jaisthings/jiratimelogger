@@ -1,4 +1,4 @@
-<mat-grid-list cols="8" rowHeight="60" class="header-layout">
+<mat-grid-list cols="7" rowHeight="60" class="header-layout">
   <mat-grid-tile><h1>Tasks</h1></mat-grid-tile>
   <mat-grid-tile>&nbsp;</mat-grid-tile>
   <mat-grid-tile>&nbsp;</mat-grid-tile>
@@ -6,20 +6,19 @@
   <mat-grid-tile>
       <mat-slide-toggle [checked]="suspendOn" (change)="suspendTool($event)">Suspend</mat-slide-toggle>
   </mat-grid-tile>
-  <mat-grid-tile>&nbsp;</mat-grid-tile>
   <mat-grid-tile>
-      <mat-slide-toggle [checked]="suspendOn" (click)="getTasks()"><i class="material-icons valign" >refresh</i>></mat-slide-toggle>
+      <div (click)="getTasks()"><i class="material-icons valign" >refresh</i></div>
   </mat-grid-tile>
   <mat-grid-tile>
-      <mat-slide-toggle [checked]="suspendOn" (click)="showQuerySettings()"><i class="material-icons valign">settings</i></mat-slide-toggle>
+      <div (click)="showQuerySettings()"><i class="material-icons valign">settings</i></div>
   </mat-grid-tile>
 
 </mat-grid-list>
 
 <mat-divider></mat-divider>
-<p class="info-section" *ngif="showMessage"><i class="material-icons valign">info</i>&nbsp;{{message}}</p>
+<p class="info-section" *ngIf="showMessage"><i class="material-icons valign">info</i>&nbsp;{{message}}</p>
 <br />
-<mat-spinner *ngif="showLoader" aria-valuenow="70" diameter="25"></mat-spinner>
+<mat-spinner *ngIf="showLoader" aria-valuenow="70" diameter="25"></mat-spinner>
 
 <div class="tasks-section">
   <div *ngFor="let issue of issues">

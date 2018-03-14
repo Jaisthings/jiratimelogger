@@ -1,5 +1,7 @@
 import {ConfigKeys} from "./config-keys.enum";
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class Storage{
     
     get(key:string):string{

@@ -1,5 +1,8 @@
+.valign{
+    vertical-align: middle;
+}
 .info-section{
-    padding: 15;
+    padding: 15px;
 }
 
 .tasks-section mat-grid-list{

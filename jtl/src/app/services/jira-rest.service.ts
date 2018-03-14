@@ -8,7 +8,7 @@ import { JiraResponseWrapper } from '../stubs/jira';
 export class JiraRestService {
 
   //Jira Host constants
-  jiraRestUrl:string = "/rest/api/2";
+  jiraRestUrl:string = "/rest/api/latest";
   
   //api endpoints
   searchIssuesEndPoint = "/search?jql=";
@@ -20,8 +20,9 @@ export class JiraRestService {
 
 
   getTasks():Observable<JiraResponseWrapper>{
-    let jiraDefaultSearchQueryString = `assignee = ${this.storage.getUserName()} and status not in ('Resolved','Closed','Completed','Close','Cancelled') and issueType in ('Task')`;
-    let url = this.storage.getJiraHost()+this.jiraRestUrl+this.searchIssuesEndPoint+jiraDefaultSearchQueryString; 
+    //let jiraDefaultSearchQueryString = `assignee = ${this.storage.getUserName()} and status not in ('Resolved','Closed','Completed','Close','Cancelled') and issueType in ('Task','Technical task')`;
+    let jiraSearchQueryString = this.storage.getJiraQuery();
+    let url = this.storage.getJiraHost()+this.jiraRestUrl+this.searchIssuesEndPoint+jiraSearchQueryString; 
     return this.httpClient.get<JiraResponseWrapper>(url,{headers:this.buildHeaders()});
   }
 
@@ -39,6 +40,11 @@ export class JiraRestService {
     let body = {"transition":{"id":this.transitionIDForClose}};
     this.httpClient.post(url,JSON.stringify(body),{headers:this.buildHeaders()})
                         .subscribe(data=> console.log(data),error => console.log(error));
+  }
+
+  testConnection():Observable<boolean>{
+    let url = this.storage.getJiraHost()+this.jiraRestUrl
+    return 
   }
 
   buildHeaders():HttpHeaders{

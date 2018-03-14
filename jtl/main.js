@@ -1,6 +1,5 @@
-import { session } from 'electron';
 
-const {app,BrowserWindow} = require('electron');
+const {app,BrowserWindow,session} = require('electron');
 const path =require('path');
 const url = require('url');
 
@@ -8,7 +7,7 @@ let win;
 
 function createWindow() {
     win = new BrowserWindow({
-        width:800,
+        width:900,
         height:600,
         webPreferences:{
              devTools:true,
@@ -35,6 +34,9 @@ function createWindow() {
         details.requestHeaders['User-Agent'] = 'chrome';
         callback({cancel:false,requestHeaders:details.requestHeaders});
     });
+
+    // Open the DevTools.
+    win.webContents.openDevTools();
 }
 
 app.on('ready',createWindow)

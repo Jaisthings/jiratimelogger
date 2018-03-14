@@ -1,3 +1,19 @@
-<p>
-  settings works!
-</p>
+<div class="example-container">
+
+    <mat-form-field>
+      <input type="url" matInput placeholder="Jira Host" [(ngModel)]="jiraHostServer">
+    </mat-form-field>
+  
+    <mat-form-field>
+      <input type="text" matInput placeholder="Username" [(ngModel)]="username">
+    </mat-form-field>
+    
+    <mat-form-field>
+        <input type="password" matInput placeholder="Passphrase" [(ngModel)]="passphrase">
+    </mat-form-field>
+  </div>   
+    
+  <button class="button" mat-button (click)="resetConnectionDetails()">Cancel</button>
+  <button class="button" mat-raised-button mat-button color="primary" (click)="saveConnectionDetails()">Save</button>
+    
+  

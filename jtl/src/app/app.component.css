@@ -9,3 +9,19 @@ mat-sidenav{
     margin: 0px 4px 0px 0px;
     height:500px;
 }
+
+mat-sidenav h4{
+    padding: 10px 10px 0px 10px;
+    border-bottom: 1px solid #f1f1f1;
+    border-right: 1px solid #f1f1f1;
+}
+
+mat-sidenav h4 a{
+    text-decoration: none;
+    color: #333;
+}
+
+mat-sidenav-content{
+    margin: 0 0 0 0;
+    padding: 10;
+}

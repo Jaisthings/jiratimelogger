@@ -20,19 +20,22 @@ export class LoggerComponent implements OnInit {
   issueStartTime:number;
   suspendOn:boolean = false;
 
+  badConnectionDetailsMsg:string = "There seems to be a problem connecting to the Jira server. Please check the details in the Settings section.";
+
   constructor(private jService:JiraRestService,private snackBar:MatSnackBar) { }
 
   ngOnInit() {
     if(this.goodToConnect()){
+      this.showMessage = false;
       this.getTasks();
     }else{
       this.showMessage = true;
-      this.message = "There seems to be a problem connecting to the Jira server.Please check the details in the Settings section.";
+      this.message = this.badConnectionDetailsMsg;
     }
   }
 
   getTasks(){
-    this.showLoader = true;
+    this.showLoader = !this.showLoader;
     this.jService.getTasks()
                     .subscribe(wrapper => {
                         this.issues = wrapper.issues;
@@ -47,6 +50,7 @@ export class LoggerComponent implements OnInit {
                           this.showMessage = true;
                           this.message = "No Tasks matched the Query criteria.";
                         }
+                        this.showLoader = !this.showLoader;
                     });
   }
   
