@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { LoggerComponent } from './components/logger/logger.component';
+import { LoggerComponent, LogWorkSettingsDialog } from './components/logger/logger.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router/src/config';
@@ -26,7 +26,7 @@ const appRoutes:Routes = [
     LoggerComponent,
     SettingsComponent,
     RoundPipe,
-    
+    LogWorkSettingsDialog
   ],
   imports: [
     BrowserModule,
@@ -55,6 +55,8 @@ const appRoutes:Routes = [
   ],
   bootstrap: [AppComponent],
   schemas:[NO_ERRORS_SCHEMA],
-  entryComponents:[]
+  entryComponents:[
+    LogWorkSettingsDialog
+  ]
 })
 export class AppModule { }

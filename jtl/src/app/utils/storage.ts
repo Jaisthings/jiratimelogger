@@ -30,7 +30,7 @@ export class Storage{
 
     isJiraQueryCustom():boolean{
         let flag:string = this.get(ConfigKeys.isJiraQueryCustom);
-        if(flag == "1")
+        if(flag != null && flag == "1")
             return true;
         else
             return false;
