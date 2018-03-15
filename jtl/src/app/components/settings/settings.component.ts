@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '../../utils/storage';
 import { JiraRestService } from '../../services/jira-rest.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-settings',
@@ -13,7 +14,8 @@ export class SettingsComponent implements OnInit {
   passphrase:string;
   jiraHostServer:string;
 
-  constructor(private storage:Storage,private jiraSvc:JiraRestService) { }
+  constructor(private storage:Storage,private jiraSvc:JiraRestService,
+                  private snackBar:MatSnackBar) { }
 
   ngOnInit() {
     if(this.storage.getJiraHost() != null)
@@ -32,6 +34,7 @@ export class SettingsComponent implements OnInit {
       this.storage.setUserName(this.username);
       this.storage.setPassphrase(this.passphrase);
       this.testConnection();
+      this.snackBar.open("Settings saved.",null,{duration:5000});
   }
 
   resetConnectionDetails():void{

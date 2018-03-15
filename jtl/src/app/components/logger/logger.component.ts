@@ -45,6 +45,7 @@ export class LoggerComponent implements OnInit {
     this.jService.getTasks()
                     .subscribe(wrapper => {
                         this.issues = wrapper.issues;
+                        console.log(this.issues);
                         if(this.issues.length > 0){
                           this.issuesMap.clear();
                           this.issues.forEach((issue)=>{
@@ -69,7 +70,8 @@ export class LoggerComponent implements OnInit {
       task.active = false;
     })
     //activate appropriate task
-    this.issuesMap.get(this.activeIssueKey).active = true;
+    if(this.activeIssueKey != null)
+      this.issuesMap.get(this.activeIssueKey).active = true;
   }
 
   logCurrentActiveTask():void{
@@ -103,7 +105,10 @@ export class LoggerComponent implements OnInit {
   }
 
   showQuerySettings():void{
-    this.settingsDialog.open(LogWorkSettingsDialog,{width:"600px"});
+    let querySettingsDialog = this.settingsDialog.open(LogWorkSettingsDialog,{width:"600px"});
+    querySettingsDialog.afterClosed().subscribe(()=>{
+      this.init();
+    });
   }
 }
 
@@ -113,8 +118,8 @@ export class LoggerComponent implements OnInit {
 })
 export class LogWorkSettingsDialog implements OnInit{
   
-  taskTypeFilterString:string = " and issuetype in ('Task', 'Technical task')";
-  defaultQueryString:string = `assignee = ${this.storage.getUserName()} and status not in ('Resolved','Closed','Completed','Close','Cancelled') `+this.taskTypeFilterString;
+  stdFilterString:string = " and status in ('In Progress') and issuetype in ('Sub-task')";
+  defaultQueryString:string = `assignee = ${this.storage.getUserName()} `+this.stdFilterString;
   customQueryFlag:boolean = false;
   jiraQuery:string="";
 
@@ -151,7 +156,7 @@ export class LogWorkSettingsDialog implements OnInit{
   saveQuerySettings():void{
     let query;
     if(this.customQueryFlag){
-      query = this.jiraQuery+this.taskTypeFilterString;
+      query = this.jiraQuery+this.stdFilterString;
     }else{
       query = this.defaultQueryString;
     }

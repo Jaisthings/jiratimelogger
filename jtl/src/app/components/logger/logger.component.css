@@ -16,10 +16,10 @@
 .task-card{
     max-width: 400px;
     background-color: #f1f1f1;
-    margin-bottom: 15px;
+    margin-bottom: 10px 10px 10px 10px;
 }
 
 mat-card-header,mat-card-content{
     background-color: #fff;
-    padding: 15;
+    padding: 15px;
 }

@@ -31,7 +31,7 @@ export class JiraRestService {
 
   addWorkLog(issueKey:string,timeInSeconds:number):void{
     if(issueKey!=null && timeInSeconds > 60){ //Ensuring a minimum of 1 minute is logged against the task
-      let url = this.storage.getJiraHost()+this.jiraRestUrl+"/issues/"+issueKey+this.addWorkLogEndPoint;
+      let url = this.storage.getJiraHost()+this.jiraRestUrl+"/issue/"+issueKey+this.addWorkLogEndPoint;
       let body = {timeSpentSeconds:timeInSeconds};
       this.httpClient.post(url,JSON.stringify(body),{headers:this.buildHeaders()})
                         .subscribe(data=> console.log(data),error => console.log(error));
