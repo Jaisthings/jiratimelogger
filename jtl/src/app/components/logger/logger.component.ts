@@ -27,6 +27,10 @@ export class LoggerComponent implements OnInit {
                       private storage:Storage) { }
 
   ngOnInit() {
+    this.init();  
+  }
+
+  init():void{
     if(this.goodToConnect()){
       this.showMessage = false;
       this.getTasks();
@@ -36,7 +40,7 @@ export class LoggerComponent implements OnInit {
     }
   }
 
-  getTasks(){
+  getTasks():void{
     this.showLoader = !this.showLoader;
     this.jService.getTasks()
                     .subscribe(wrapper => {
@@ -68,17 +72,34 @@ export class LoggerComponent implements OnInit {
     this.issuesMap.get(this.activeIssueKey).active = true;
   }
 
+  logCurrentActiveTask():void{
+    let logTimeSeconds = (performance.now() - this.issueStartTime)/1000;
+    this.jService.addWorkLog(this.activeIssueKey,logTimeSeconds);
+  }
+
   //UI Triggers
   suspendTool(event:any):void{
-
+    if(event.checked){
+      this.logCurrentActiveTask();
+    }else{
+      this.issueStartTime = performance.now();
+    }
   }
 
   activateTask(event:any):void{
-
+    this.logCurrentActiveTask();
+    if(event.checked){
+      //update activeIssueKey and issueStartTime
+      this.activeIssueKey = event.source.id;
+      this.issueStartTime = performance.now();
+    }else{
+      this.activeIssueKey = null;
+    }
   }
 
   closeTask(issueKey:string):void{
-
+    this.jService.closeIssue(issueKey);
+    this.init();
   }
 
   showQuerySettings():void{

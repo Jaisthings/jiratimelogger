@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { JiraResponseWrapper } from '../stubs/jira';
 import { HttpResponse } from 'selenium-webdriver/http';
 import { error } from 'util';
+import { utils } from 'protractor';
 
 @Injectable()
 export class JiraRestService {
@@ -29,7 +30,7 @@ export class JiraRestService {
   }
 
   addWorkLog(issueKey:string,timeInSeconds:number):void{
-    if(timeInSeconds > 60){ //Ensuring a minimum of 1 minute is logged against the task
+    if(issueKey!=null && timeInSeconds > 60){ //Ensuring a minimum of 1 minute is logged against the task
       let url = this.storage.getJiraHost()+this.jiraRestUrl+"/issues/"+issueKey+this.addWorkLogEndPoint;
       let body = {timeSpentSeconds:timeInSeconds};
       this.httpClient.post(url,JSON.stringify(body),{headers:this.buildHeaders()})
