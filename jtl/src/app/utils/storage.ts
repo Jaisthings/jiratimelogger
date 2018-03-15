@@ -32,8 +32,14 @@ export class Storage{
         let flag:string = this.get(ConfigKeys.isJiraQueryCustom);
         if(flag != null && flag == "1")
             return true;
-        else
-            return false;
+        return false;
+    }
+
+    isConnectionSuccessful():boolean{
+        let flag:string = this.get(ConfigKeys.isConnectionSuccessful);
+        if(flag != null && flag == "1")
+            return true;
+        return false;
     }
 
     setJiraHost(host:string):void{
@@ -56,10 +62,15 @@ export class Storage{
     }
 
     setJiraQueryCustomFlag(flag:boolean):void{
-        if(flag)
-            this.set(ConfigKeys.isJiraQueryCustom,1+"");
-        else
-            this.set(ConfigKeys.isJiraQueryCustom,0+"");
+        let tmp = "0";
+        if(flag){tmp = "1";}
+        this.set(ConfigKeys.isJiraQueryCustom,tmp);
+    }
+
+    setConnectionSuccessful(flag:boolean):void{
+        let tmp = "0";
+        if(flag){tmp = "1";}
+        this.set(ConfigKeys.isConnectionSuccessful,tmp);            
     }
 
 }

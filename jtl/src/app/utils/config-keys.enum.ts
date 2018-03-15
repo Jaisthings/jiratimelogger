@@ -3,5 +3,6 @@ export enum ConfigKeys {
      userName = "userName",
      passPhrase = "passPhrase",
      jiraQuery = "jiraQuery",
-     isJiraQueryCustom = "isJiraQueryCustom"
+     isJiraQueryCustom = "isJiraQueryCustom",
+     isConnectionSuccessful = "isConnectionSuccessful"
 }

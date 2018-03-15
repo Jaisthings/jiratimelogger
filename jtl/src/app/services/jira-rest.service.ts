@@ -3,6 +3,8 @@ import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {Storage} from "../utils/storage";
 import { Observable } from 'rxjs/Observable';
 import { JiraResponseWrapper } from '../stubs/jira';
+import { HttpResponse } from 'selenium-webdriver/http';
+import { error } from 'util';
 
 @Injectable()
 export class JiraRestService {
@@ -14,13 +16,13 @@ export class JiraRestService {
   searchIssuesEndPoint = "/search?jql=";
   addWorkLogEndPoint = "/worklog";
   changeStatusEndPoint = "/transitions";
+  permissionsEndPoint = "/mypermissions";
   transitionIDForClose = "51";
 
   constructor(private httpClient:HttpClient, private storage:Storage) { }
 
 
   getTasks():Observable<JiraResponseWrapper>{
-    //let jiraDefaultSearchQueryString = `assignee = ${this.storage.getUserName()} and status not in ('Resolved','Closed','Completed','Close','Cancelled') and issueType in ('Task','Technical task')`;
     let jiraSearchQueryString = this.storage.getJiraQuery();
     let url = this.storage.getJiraHost()+this.jiraRestUrl+this.searchIssuesEndPoint+jiraSearchQueryString; 
     return this.httpClient.get<JiraResponseWrapper>(url,{headers:this.buildHeaders()});
@@ -42,9 +44,28 @@ export class JiraRestService {
                         .subscribe(data=> console.log(data),error => console.log(error));
   }
 
-  testConnection():Observable<boolean>{
-    let url = this.storage.getJiraHost()+this.jiraRestUrl
-    return 
+  testConnection():void{
+    let url = this.storage.getJiraHost()+this.jiraRestUrl+this.permissionsEndPoint;
+    this.httpClient.get(url,{headers:this.buildHeaders(),observe:"response"})
+                      .subscribe((res)=>{
+                          if(res.status == 200){
+                            let uname:string = res.headers.get("x-ausername");
+                            if(this.storage.getUserName() != null && 
+                                  uname === this.storage.getUserName()){
+                                    //User Authenticated
+                                    this.storage.setConnectionSuccessful(true);
+                                  }else{
+                                    this.storage.setConnectionSuccessful(false);
+                                  }
+                          }else{
+                            console.log("Connection Unsuccessful/Unauthorized");
+                            this.storage.setConnectionSuccessful(false);
+                          }
+                      },
+                    error=>{
+                      console.log("Connection Unsuccessful/Unauthorized");
+                            this.storage.setConnectionSuccessful(false);
+                    });
   }
 
   buildHeaders():HttpHeaders{
@@ -53,6 +74,7 @@ export class JiraRestService {
                     .set("Content-Type","application/json")
                       .set("Authorization",
                           "Basic "+window.btoa(this.storage.getUserName()+":"+this.storage.getPassphrase()));
+                            console.log(requestHeaders);
     return requestHeaders;
   }
 

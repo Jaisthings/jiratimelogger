@@ -23,7 +23,8 @@ export class LoggerComponent implements OnInit {
   badConnectionDetailsMsg:string = "There seems to be a problem connecting to the Jira server. Please check the details in the Settings section.";
 
   constructor(private jService:JiraRestService,private snackBar:MatSnackBar,
-                  private settingsDialog:MatDialog) { }
+                  private settingsDialog:MatDialog,
+                      private storage:Storage) { }
 
   ngOnInit() {
     if(this.goodToConnect()){
@@ -56,9 +57,7 @@ export class LoggerComponent implements OnInit {
   }
   
   goodToConnect():boolean{
-    let flag:boolean = false;
-    //TODO: implement logic
-    return flag;
+    return this.storage.isConnectionSuccessful();
   }
 
   highlightActiveTask():void{
