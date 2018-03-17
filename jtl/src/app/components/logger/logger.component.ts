@@ -83,6 +83,7 @@ export class LoggerComponent implements OnInit {
   suspendTool(event:any):void{
     if(event.checked){
       this.logCurrentActiveTask();
+      this.init();
     }else{
       this.issueStartTime = performance.now();
     }
@@ -97,6 +98,7 @@ export class LoggerComponent implements OnInit {
     }else{
       this.activeIssueKey = null;
     }
+    this.init();
   }
 
   closeTask(issueKey:string):void{
@@ -134,7 +136,6 @@ export class LogWorkSettingsDialog implements OnInit{
   loadSettings():void{
     this.customQueryFlag = this.storage.isJiraQueryCustom();
     let query = this.storage.getJiraQuery();
-    console.log("init query - "+query);
     if(query != null){
       this.jiraQuery = query;
     }
