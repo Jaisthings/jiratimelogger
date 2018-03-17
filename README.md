@@ -22,3 +22,8 @@ A simple GUI utility that makes it very easy for a user to log time against his/
   
 # Installation 
   - To be updated
+  
+# Technology Stack
+  - Electron 1.8.3
+  - Angular 5
+ 
