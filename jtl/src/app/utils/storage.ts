@@ -1,9 +1,15 @@
 import {ConfigKeys} from "./config-keys.enum";
 import { Injectable } from "@angular/core";
+import * as crypto from 'crypto-js';
 
 @Injectable()
 export class Storage{
     
+    //Random key for cryption
+    key:string = "hku5sdf62";
+    //Default JQL Filter strings
+    stdFilterString:string = " and status in ('In Progress') and issuetype in ('Sub-task') order by key";
+  
     get(key:string):string{
         return localStorage.getItem(key);
     }
@@ -21,7 +27,7 @@ export class Storage{
     }
 
     getPassphrase():string{
-        return this.get(ConfigKeys.passPhrase);
+        return (crypto.AES.decrypt(this.get(ConfigKeys.passPhrase),this.key)).toString(crypto.enc.Utf8);
     }
 
     getJiraQuery():string{
@@ -51,19 +57,24 @@ export class Storage{
 
     setUserName(username:string):void{
         this.set(ConfigKeys.userName,username);
+        this.setJiraQuery(`assignee = ${this.getUserName()}`);
     }
 
     setPassphrase(passPhrase:string):void{
-        this.set(ConfigKeys.passPhrase,passPhrase);
+        let hash = crypto.AES.encrypt(passPhrase,this.key);
+        this.set(ConfigKeys.passPhrase,hash);
     }
 
     setJiraQuery(query:string):void{
-        this.set(ConfigKeys.jiraQuery,query);
+        this.set(ConfigKeys.jiraQuery,query+this.stdFilterString);
     }
 
     setJiraQueryCustomFlag(flag:boolean):void{
         let tmp = "0";
         if(flag){tmp = "1";}
+        else{
+            this.setJiraQuery(`assignee = ${this.getUserName()}`);
+        }
         this.set(ConfigKeys.isJiraQueryCustom,tmp);
     }
 

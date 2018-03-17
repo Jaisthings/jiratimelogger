@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { JiraRestService } from '../../services/jira-rest.service';
-import { Issue } from '../../stubs/jira';
+import { Issue, JiraResponseWrapper } from '../../stubs/jira';
 import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
 import { Storage } from '../../utils/storage';
 import { HttpResponse } from '@angular/common/http/src/response';
@@ -35,36 +35,45 @@ export class LoggerComponent implements OnInit {
     if(this.goodToConnect()){
       this.showMessage = false;
       this.getTasks();
-    }else{
-      this.showMessage = true;
-      this.message = this.badConnectionDetailsMsg;
     }
   }
 
   getTasks():void{
     this.showLoader = true;
-    this.showMessage = false;
     this.jService.getTasks()
-                    .subscribe(wrapper => {
-                        this.issues = wrapper.issues;
-                        console.log(this.issues);
-                        if(this.issues.length > 0){
-                          this.issuesMap.clear();
-                          this.issues.forEach((issue)=>{
-                            issue.active = false;
-                            this.issuesMap.set(issue.key,issue);
-                          });
-                          this.highlightActiveTask();
+                    .subscribe((resp:HttpResponse<any>)=> {
+                        this.showLoader = false;
+                        if(resp.ok){
+                          let wrapper = <JiraResponseWrapper> resp.body;
+                          this.issues = wrapper.issues;
+                          
+                          if(this.issues.length > 0){
+                            this.issuesMap.clear();
+                            this.issues.forEach((issue)=>{
+                              issue.active = false;
+                              this.issuesMap.set(issue.key,issue);
+                            });
+                            this.highlightActiveTask();
+                          }else{
+                            this.showMessage = true;
+                            this.message = "No Tasks matched the Query criteria.";
+                          } 
                         }else{
                           this.showMessage = true;
-                          this.message = "No Tasks matched the Query criteria.";
+                          this.message = "Encountered Error while fetching Tasks.";
                         }
-                        this.showLoader = false;
                     });
   }
   
   goodToConnect():boolean{
-    return this.storage.isConnectionSuccessful();
+    let flag = this.storage.isConnectionSuccessful();
+    if(!flag){
+      this.showMessage = true;
+      this.message = this.badConnectionDetailsMsg;
+    }else{
+      this.showMessage = false;
+    }
+    return flag;
   }
 
   highlightActiveTask():void{
@@ -92,37 +101,42 @@ export class LoggerComponent implements OnInit {
   //UI Triggers
   suspendTool(event:any):void{
     if(event.checked){
-      this.logCurrentActiveTask();
-      this.init();
+      if(this.goodToConnect){
+        this.logCurrentActiveTask();
+        this.init();
+      }
     }else{
       this.issueStartTime = performance.now();
     }
   }
 
   activateTask(event:any):void{
-    this.logCurrentActiveTask();
-    if(event.checked){
-      //update activeIssueKey and issueStartTime
-      this.activeIssueKey = event.source.id;
-      this.issueStartTime = performance.now();
-    }else{
-      this.activeIssueKey = null;
+    if(this.goodToConnect){
+      this.logCurrentActiveTask();
+      if(event.checked){
+        //update activeIssueKey and issueStartTime
+        this.activeIssueKey = event.source.id;
+        this.issueStartTime = performance.now();
+      }else{
+        this.activeIssueKey = null;
+      }
+      this.init();
     }
-    this.init();
   }
 
   closeTask(issueKey:string):void{
-    this.jService.closeIssue(issueKey)
-                    .subscribe((resp:HttpResponse<any>)=>{
-                      if(resp.ok){
-                        this.init();
-                        this.notifyUI("Task marked as Done.");
-                      }
-                      else{
-                        this.notifyUI("Error encountered while closing the Task.");
-                      }
-                    });
-    
+    if(this.goodToConnect){
+      this.jService.closeIssue(issueKey)
+      .subscribe((resp:HttpResponse<any>)=>{
+        if(resp.ok){
+          this.init();
+          this.notifyUI("Task marked as Done.");
+        }
+        else{
+          this.notifyUI("Error encountered while closing the Task.");
+        }
+      });
+    }
   }
 
   showQuerySettings():void{
@@ -144,8 +158,6 @@ export class LoggerComponent implements OnInit {
 })
 export class LogWorkSettingsDialog implements OnInit{
   
-  stdFilterString:string = " and status in ('In Progress') and issuetype in ('Sub-task') order by key";
-  defaultQueryString:string = `assignee = ${this.storage.getUserName()} `+this.stdFilterString;
   customQueryFlag:boolean = false;
   jiraQuery:string="";
 
@@ -179,15 +191,10 @@ export class LogWorkSettingsDialog implements OnInit{
   }
 
   saveQuerySettings():void{
-    let query;
     if(this.customQueryFlag){
-      query = this.jiraQuery+this.stdFilterString;
-    }else{
-      query = this.defaultQueryString;
+      this.storage.setJiraQuery(this.jiraQuery);
     }
-    console.log(query);
     this.storage.setJiraQueryCustomFlag(this.customQueryFlag);
-    this.storage.setJiraQuery(query);
     this.dialogRef.close();
     this.snackBar.open("Settings Saved.",null,{duration:5000});
   }

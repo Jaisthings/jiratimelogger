@@ -29,7 +29,9 @@
                 <h2>{{issue.key}}</h2>
               </mat-card-title>
               <mat-card-subtitle>{{issue.fields.summary}}</mat-card-subtitle>
-              <mat-slide-toggle id="{{issue.key}}" checked="{{issue.active}}" (change)="activateTask($event)">Working</mat-slide-toggle>
+              <div style="width:100%;text-align: end">
+                <mat-slide-toggle id="{{issue.key}}" checked="{{issue.active}}" (change)="activateTask($event)">Active</mat-slide-toggle>
+              </div>
             </mat-card-header>
 
             <div>

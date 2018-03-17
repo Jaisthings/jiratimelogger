@@ -24,10 +24,10 @@ export class JiraRestService {
   constructor(private httpClient:HttpClient, private storage:Storage) { }
 
 
-  getTasks():Observable<JiraResponseWrapper>{
+  getTasks():Observable<HttpResponse>{
     let jiraSearchQueryString = this.storage.getJiraQuery();
     let url = this.storage.getJiraHost()+this.jiraRestUrl+this.searchIssuesEndPoint+jiraSearchQueryString; 
-    return this.httpClient.get<JiraResponseWrapper>(url,{headers:this.buildHeaders()});
+    return this.httpClient.get(url,{headers:this.buildHeaders(),observe:'response'});
   }
 
   addWorkLog(issueKey:string,timeInSeconds:number):Observable<HttpResponse>{
