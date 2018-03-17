@@ -1,16 +1,15 @@
-<mat-grid-list cols="7" rowHeight="60" class="header-layout">
-  <mat-grid-tile><h1>My Tasks</h1></mat-grid-tile>
-  <mat-grid-tile>&nbsp;</mat-grid-tile>
+<mat-grid-list cols="6" rowHeight="60" class="header-layout">
+  <mat-grid-tile><h2>My Tasks</h2></mat-grid-tile>
   <mat-grid-tile>&nbsp;</mat-grid-tile>
   <mat-grid-tile>&nbsp;</mat-grid-tile>
   <mat-grid-tile>
       <mat-slide-toggle [checked]="suspendOn" (change)="suspendTool($event)">Suspend</mat-slide-toggle>
   </mat-grid-tile>
   <mat-grid-tile>
-      <div (click)="getTasks()"><i class="material-icons valign" >refresh</i></div>
+      <div (click)="getTasks()"><i class="material-icons valign linkPointer" >refresh</i></div>
   </mat-grid-tile>
   <mat-grid-tile>
-      <div (click)="showQuerySettings()"><i class="material-icons valign">settings</i></div>
+      <div (click)="showQuerySettings()"><i class="material-icons valign linkPointer">settings</i></div>
   </mat-grid-tile>
 
 </mat-grid-list>

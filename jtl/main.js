@@ -7,7 +7,7 @@ let win;
 
 function createWindow() {
     win = new BrowserWindow({
-        width:900,
+        width:1000,
         height:600,
         webPreferences:{
              devTools:true,

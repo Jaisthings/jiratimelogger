@@ -3,6 +3,7 @@ import { JiraRestService } from '../../services/jira-rest.service';
 import { Issue } from '../../stubs/jira';
 import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
 import { Storage } from '../../utils/storage';
+import { HttpResponse } from '@angular/common/http/src/response';
 
 @Component({
   selector: 'app-logger',
@@ -41,7 +42,8 @@ export class LoggerComponent implements OnInit {
   }
 
   getTasks():void{
-    this.showLoader = !this.showLoader;
+    this.showLoader = true;
+    this.showMessage = false;
     this.jService.getTasks()
                     .subscribe(wrapper => {
                         this.issues = wrapper.issues;
@@ -57,7 +59,7 @@ export class LoggerComponent implements OnInit {
                           this.showMessage = true;
                           this.message = "No Tasks matched the Query criteria.";
                         }
-                        this.showLoader = !this.showLoader;
+                        this.showLoader = false;
                     });
   }
   
@@ -76,7 +78,15 @@ export class LoggerComponent implements OnInit {
 
   logCurrentActiveTask():void{
     let logTimeSeconds = (performance.now() - this.issueStartTime)/1000;
-    this.jService.addWorkLog(this.activeIssueKey,logTimeSeconds);
+    if(this.activeIssueKey!=null && logTimeSeconds > 60){ //Ensuring a minimum of 1 minute is logged against the task
+        this.jService.addWorkLog(this.activeIssueKey,logTimeSeconds)
+                      .subscribe((resp:HttpResponse<any>)=>{
+                          if(resp.ok)
+                            this.notifyUI("Task Hours updated.");
+                          else
+                            this.notifyUI("Encountered error while updating Task Hours.");
+                      });
+    }
   }
 
   //UI Triggers
@@ -102,8 +112,17 @@ export class LoggerComponent implements OnInit {
   }
 
   closeTask(issueKey:string):void{
-    this.jService.closeIssue(issueKey);
-    this.init();
+    this.jService.closeIssue(issueKey)
+                    .subscribe((resp:HttpResponse<any>)=>{
+                      if(resp.ok){
+                        this.init();
+                        this.notifyUI("Task marked as Done.");
+                      }
+                      else{
+                        this.notifyUI("Error encountered while closing the Task.");
+                      }
+                    });
+    
   }
 
   showQuerySettings():void{
@@ -112,15 +131,20 @@ export class LoggerComponent implements OnInit {
       this.init();
     });
   }
+
+  notifyUI(msg:string):void{
+    this.snackBar.open(msg,null,{duration:5000});
+  }
 }
 
 @Component({
   selector:"log-work-settings-dialog",
-  templateUrl:"log-work-settings-dialog.html"
+  templateUrl:"log-work-settings-dialog.html",
+  styleUrls: ['./logger.component.css']
 })
 export class LogWorkSettingsDialog implements OnInit{
   
-  stdFilterString:string = " and status in ('In Progress') and issuetype in ('Sub-task')";
+  stdFilterString:string = " and status in ('In Progress') and issuetype in ('Sub-task') order by key";
   defaultQueryString:string = `assignee = ${this.storage.getUserName()} `+this.stdFilterString;
   customQueryFlag:boolean = false;
   jiraQuery:string="";

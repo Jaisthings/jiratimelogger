@@ -6,6 +6,7 @@ import { JiraResponseWrapper } from '../stubs/jira';
 import { HttpResponse } from 'selenium-webdriver/http';
 import { error } from 'util';
 import { utils } from 'protractor';
+import { Response } from '_debugger';
 
 @Injectable()
 export class JiraRestService {
@@ -13,12 +14,12 @@ export class JiraRestService {
   //Jira Host constants
   jiraRestUrl:string = "/rest/api/latest";
   
-  //api endpoints
+  //api endpoints/constants
   searchIssuesEndPoint = "/search?jql=";
   addWorkLogEndPoint = "/worklog";
   changeStatusEndPoint = "/transitions";
   permissionsEndPoint = "/mypermissions";
-  transitionIDForClose = "51";
+  transitionIDForDone = "31";
 
   constructor(private httpClient:HttpClient, private storage:Storage) { }
 
@@ -29,20 +30,16 @@ export class JiraRestService {
     return this.httpClient.get<JiraResponseWrapper>(url,{headers:this.buildHeaders()});
   }
 
-  addWorkLog(issueKey:string,timeInSeconds:number):void{
-    if(issueKey!=null && timeInSeconds > 60){ //Ensuring a minimum of 1 minute is logged against the task
+  addWorkLog(issueKey:string,timeInSeconds:number):Observable<HttpResponse>{
       let url = this.storage.getJiraHost()+this.jiraRestUrl+"/issue/"+issueKey+this.addWorkLogEndPoint;
       let body = {timeSpentSeconds:timeInSeconds};
-      this.httpClient.post(url,JSON.stringify(body),{headers:this.buildHeaders()})
-                        .subscribe(data=> console.log(data),error => console.log(error));
-    }
+      return this.httpClient.post(url,JSON.stringify(body),{headers:this.buildHeaders(),observe:'response'});
   }
 
-  closeIssue(issueKey:string):void{
-    let url = this.storage.getJiraHost()+this.jiraRestUrl+"/issues/"+issueKey+this.changeStatusEndPoint;
-    let body = {"transition":{"id":this.transitionIDForClose}};
-    this.httpClient.post(url,JSON.stringify(body),{headers:this.buildHeaders()})
-                        .subscribe(data=> console.log(data),error => console.log(error));
+  closeIssue(issueKey:string):Observable<HttpResponse>{
+    let url = this.storage.getJiraHost()+this.jiraRestUrl+"/issue/"+issueKey+this.changeStatusEndPoint;
+    let body = {"transition":{"id":this.transitionIDForDone}};
+    return this.httpClient.post(url,JSON.stringify(body),{headers:this.buildHeaders(),observe:'response'});
   }
 
   testConnection():void{

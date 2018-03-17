@@ -1,20 +1,20 @@
 <h1 mat-dialog-title>Log Work Query Settings</h1>
-<br />
-<div mat-dialog-content>
-    <mat-grid-list cols="1" rowHeight="60">
-        <mat-grid-tile>
-            <mat-radio-group (change)="queryCategoryChanged($event)">
+<div mat-dialog-content >
+    <mat-grid-list cols="1" rowHeight="80" >
+        <mat-grid-tile >
+            <mat-radio-group (change)="queryCategoryChanged($event)" style="width: 100%;text-align: start">
                 <mat-radio-button value="0" [checked]="!customQueryFlag"> Assigned Tasks</mat-radio-button>&nbsp;
                 <mat-radio-button value="1" [checked]="customQueryFlag"> Custom Jira Query</mat-radio-button>
             </mat-radio-group>
         </mat-grid-tile>
         <mat-grid-tile>
-            <mat-form-field>
+            <mat-form-field style="width: 100%;text-align: start">
                 <input [disabled]="!customQueryFlag" [(ngModel)]="jiraQuery" matInput placeholder="Jira Query to pull the Issues/Tasks" />
             </mat-form-field>
         </mat-grid-tile>
     </mat-grid-list>
+    <div>
+        <button mat-button (click)="cancel()">Cancel</button>
+        <button mat-raised-button  (click)="saveQuerySettings()">Save</button>
+    </div>
 </div>
-<br />
-<button mat-button (click)="cancel()">Cancel</button>
-<button mat-button (click)="saveQuerySettings()">Save</button>

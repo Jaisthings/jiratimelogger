@@ -1,6 +1,9 @@
 .valign{
     vertical-align: middle;
 }
+.linkPointer{
+    cursor: pointer;
+}
 .info-section{
     padding: 15px;
 }
@@ -10,16 +13,21 @@
 }
 
 .tasks-section mat-grid-tile{
-    margin-top:10px;
+    margin:10px 0px 0px 0px;
+}
+
+.tasks-section{
+    margin:0px 0px 0px 10px;
 }
 
 .task-card{
     max-width: 400px;
     background-color: #f1f1f1;
-    margin-bottom: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
 }
 
 mat-card-header,mat-card-content{
     background-color: #fff;
-    padding: 15px;
+    padding: 5px;
 }
+
