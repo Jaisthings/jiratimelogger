@@ -30,4 +30,6 @@ mat-card-header,mat-card-content{
     background-color: #fff;
     padding: 5px;
 }
-
+mat-progress-bar{
+    margin: 0px 0px 0px 5px;
+}
