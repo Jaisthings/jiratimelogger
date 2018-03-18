@@ -23,13 +23,13 @@
   <div *ngFor="let issue of issues">
       <mat-card class="task-card">
           <mat-card-content>
-            <mat-card-header>
+            <mat-card-header >
               <mat-card-title>
                 <img src="{{issue.fields.issuetype.iconUrl}}" width="18" height="18" />
                 <h2>{{issue.key}}</h2>
               </mat-card-title>
-              <mat-card-subtitle>{{issue.fields.summary}}</mat-card-subtitle>
-              <div style="width:100%;text-align: end">
+              <mat-card-subtitle> {{issue.fields.summary}}</mat-card-subtitle>
+              <div style="width:70%;text-align: end;">
                 <mat-slide-toggle id="{{issue.key}}" checked="{{issue.active}}" (change)="activateTask($event)">Active</mat-slide-toggle>
               </div>
             </mat-card-header>

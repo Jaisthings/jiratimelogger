@@ -33,3 +33,6 @@ mat-card-header,mat-card-content{
 mat-progress-bar{
     margin: 0px 0px 0px 5px;
 }
+mat-card-subtitle.mat-card-subtitle{
+    width: 250px;
+}
