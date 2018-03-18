@@ -21,7 +21,11 @@ A simple GUI utility that makes it very easy for a user to log time against his/
   ![alt Settings Screen](https://raw.githubusercontent.com/Jaisthings/jiratimelogger/master/jtl-settings.png)
   
 # Installation 
-  - To be updated
+
+Extract the contents and double click on your OS specific executable.
+
+  - [OSX](https://github.com/Jaisthings/jiratimelogger/blob/master/Download/JiraTimeLogger-darwin-x64.zip)
+  - [Windows](https://github.com/Jaisthings/jiratimelogger/blob/master/Download/JiraTimeLogger-win32-x64.zip)
   
 # Technology Stack
   - Electron 1.8.3
