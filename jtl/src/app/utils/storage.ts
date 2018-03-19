@@ -7,9 +7,7 @@ export class Storage{
     
     //Random key for cryption
     key:string = "hku5sdf62";
-    //Default JQL Filter strings
-    stdFilterString:string = " and status in ('In Progress') and issuetype in ('Sub-task') order by key";
-  
+    
     get(key:string):string{
         return localStorage.getItem(key);
     }
@@ -66,7 +64,7 @@ export class Storage{
     }
 
     setJiraQuery(query:string):void{
-        this.set(ConfigKeys.jiraQuery,query+this.stdFilterString);
+        this.set(ConfigKeys.jiraQuery,query);
     }
 
     setJiraQueryCustomFlag(flag:boolean):void{

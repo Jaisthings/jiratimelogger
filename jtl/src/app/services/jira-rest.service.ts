@@ -25,7 +25,10 @@ export class JiraRestService {
 
 
   getTasks():Observable<HttpResponse>{
-    let jiraSearchQueryString = this.storage.getJiraQuery();
+    //Default JQL Filter strings
+    let stdFilterString:string = " and status in ('In Progress') and issuetype in ('Sub-task') order by key ASC";
+  
+    let jiraSearchQueryString = this.storage.getJiraQuery() + stdFilterString;
     let url = this.storage.getJiraHost()+this.jiraRestUrl+this.searchIssuesEndPoint+jiraSearchQueryString; 
     return this.httpClient.get(url,{headers:this.buildHeaders(),observe:'response'});
   }
@@ -48,8 +51,8 @@ export class JiraRestService {
                       .subscribe((res)=>{
                           if(res.status == 200){
                             let uname:string = res.headers.get("x-ausername");
-                            if(this.storage.getUserName() != null && 
-                                  uname === this.storage.getUserName()){
+                            if(this.storage.getUserName() != null && uname != null &&
+                                  this.storage.getUserName().toUpperCase() == uname.toUpperCase()){
                                     //User Authenticated
                                     this.storage.setConnectionSuccessful(true);
                                   }else{

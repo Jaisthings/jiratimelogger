@@ -39,8 +39,9 @@ export class LoggerComponent implements OnInit {
   }
 
   getTasks():void{
-    this.showLoader = true;
-    this.jService.getTasks()
+    if(this.goodToConnect()){
+      this.showLoader = true;
+      this.jService.getTasks()
                     .subscribe((resp:HttpResponse<any>)=> {
                         this.showLoader = false;
                         if(resp.ok){
@@ -63,6 +64,7 @@ export class LoggerComponent implements OnInit {
                           this.message = "Encountered Error while fetching Tasks.";
                         }
                     });
+      }
   }
   
   goodToConnect():boolean{
@@ -101,7 +103,7 @@ export class LoggerComponent implements OnInit {
   //UI Triggers
   suspendTool(event:any):void{
     if(event.checked){
-      if(this.goodToConnect){
+      if(this.goodToConnect()){
         this.logCurrentActiveTask();
         this.init();
       }
@@ -111,7 +113,7 @@ export class LoggerComponent implements OnInit {
   }
 
   activateTask(event:any):void{
-    if(this.goodToConnect){
+    if(this.goodToConnect()){
       this.logCurrentActiveTask();
       if(event.checked){
         //update activeIssueKey and issueStartTime
@@ -125,7 +127,7 @@ export class LoggerComponent implements OnInit {
   }
 
   closeTask(issueKey:string):void{
-    if(this.goodToConnect){
+    if(this.goodToConnect()){
       this.jService.closeIssue(issueKey)
       .subscribe((resp:HttpResponse<any>)=>{
         if(resp.ok){

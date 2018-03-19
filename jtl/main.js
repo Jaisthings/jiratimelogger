@@ -1,6 +1,7 @@
 
-const {app,BrowserWindow,session} = require('electron');
-const path =require('path');
+const error = require('util');
+const {app,BrowserWindow,session,webContents} = require('electron');
+const path = require('path');
 const url = require('url');
 
 let win;
@@ -39,6 +40,12 @@ function createWindow() {
     // Open the DevTools.
     //win.webContents.openDevTools();
 }
+
+//For certificate issues
+app.on('certificate-error',(event,webContents,url,error,certificate,callback)=>{
+    event.preventDefault();
+    callback(true);
+})
 
 app.on('ready',createWindow)
 
