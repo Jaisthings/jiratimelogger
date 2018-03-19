@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, enableProdMode } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { AppComponent } from './app.component';
 import { LoggerComponent, LogWorkSettingsDialog } from './components/logger/logger.component';
@@ -19,6 +20,8 @@ const appRoutes:Routes = [
   {path:'settings',component:SettingsComponent},
   {path:'log-work',component:LoggerComponent}
 ];
+enableProdMode();
+
 
 @NgModule({
   declarations: [
@@ -53,6 +56,7 @@ const appRoutes:Routes = [
     JiraRestService,
     Storage
   ],
+  
   bootstrap: [AppComponent],
   schemas:[NO_ERRORS_SCHEMA],
   entryComponents:[
