@@ -11,10 +11,11 @@ import { Routes } from '@angular/router/src/config';
 import { JiraRestService } from './services/jira-rest.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatCardModule, MatButtonModule, MatSlideToggleModule, MatDividerModule, MatSidenavModule, MatListModule, MatIconModule, MatGridListModule, MatProgressBarModule, MatProgressSpinnerModule, MatDialogModule, MatInputModule, MatSnackBarModule, MatRadioModule } from '@angular/material';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RoundPipe } from './pipes/round.pipe';
 import { Storage } from './utils/storage';
+import { ErrorInterceptor } from './interceptors/error-interceptor';
 
 const appRoutes:Routes = [
   {path:'settings',component:SettingsComponent},
@@ -54,7 +55,14 @@ enableProdMode();
   ],
   providers: [
     JiraRestService,
-    Storage
+    Storage,
+    [
+      {
+      provide:HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi:true
+      }
+    ]
   ],
   
   bootstrap: [AppComponent],

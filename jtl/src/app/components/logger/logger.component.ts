@@ -3,7 +3,7 @@ import { JiraRestService } from '../../services/jira-rest.service';
 import { Issue, JiraResponseWrapper } from '../../stubs/jira';
 import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
 import { Storage } from '../../utils/storage';
-import { HttpResponse } from '@angular/common/http/src/response';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http/src/response';
 
 @Component({
   selector: 'app-logger',
@@ -61,9 +61,12 @@ export class LoggerComponent implements OnInit {
                           } 
                         }else{
                           this.showMessage = true;
-                          this.message = "Encountered Error while fetching Tasks.";
+                          this.message = "Encountered Error while fetching Tasks. "+resp.statusText;
                         }
-                    });
+                    },
+                  (error:HttpErrorResponse) => {
+                    this.showErrorResponse(error);
+                  });
       }
   }
   
@@ -96,6 +99,9 @@ export class LoggerComponent implements OnInit {
                             this.notifyUI("Task Hours updated.");
                           else
                             this.notifyUI("Encountered error while updating Task Hours.");
+                      },
+                      (error:HttpErrorResponse)=>{
+                        this.showErrorResponse(error);
                       });
     }
   }
@@ -137,6 +143,9 @@ export class LoggerComponent implements OnInit {
         else{
           this.notifyUI("Error encountered while closing the Task.");
         }
+      },
+      (error:HttpErrorResponse) => {
+        this.showErrorResponse(error);
       });
     }
   }
@@ -150,6 +159,12 @@ export class LoggerComponent implements OnInit {
 
   notifyUI(msg:string):void{
     this.snackBar.open(msg,null,{duration:5000});
+  }
+
+  showErrorResponse(err:HttpErrorResponse):void{
+    this.showLoader = false;
+    this.showMessage = true;
+    this.message = err.status+" - "+err.message;
   }
 }
 

@@ -6,6 +6,7 @@
 }
 .info-section{
     padding: 15px;
+    word-wrap: break-word;
 }
 
 .tasks-section mat-grid-list{
