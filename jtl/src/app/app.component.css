@@ -7,7 +7,7 @@ mat-sidenav{
     background-color: #fafafa;
     width:150px;
     margin: 0px 4px 0px 0px;
-    min-height:500px;
+    height:500px;
 }
 
 mat-sidenav h4{
@@ -24,4 +24,5 @@ mat-sidenav h4 a{
 mat-sidenav-content{
     margin: 0 0 0 0;
     padding: 10;
+    min-height:500px;
 }
